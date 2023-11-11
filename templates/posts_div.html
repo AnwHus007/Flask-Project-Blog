@@ -5,24 +5,25 @@
   {% for post in posts %}
   <div class="card border-dark">
     <div class="card-header d-flex justify-content-between align-items-center">
-      <a href="/posts/{{post.user.username}}">{{post.user.username}}</a>
+      <a href="/posts/{{post.username}}">{{post.username}}</a>
       <div>
-        <span id="likes-count-{{post.id}}">
-        {{ post.likes|length }}</span> 
-        {% if user.id in post.likes|map(attribute="author")|list %}
-        <a href="/like-post/{{post.id}}"><i class="fas fa-thumbs-up"></i></a>
+        <span id="likes-count-{{post._id}}">
+        {{ post.likes }}</span> 
+        {% if post._id in user_likes %}
+        <a href="/like-post/{{post._id}}"><i class="fas fa-thumbs-up"></i></a>
         {% else %}
-        <a href="/like-post/{{post.id}}"><i class="far fa-thumbs-up"></i></a>
-        {% endif %} {% if user.id == post.author %}
+        <a href="/like-post/{{post._id}}"><i class="far fa-thumbs-up"></i></a>
+        {% endif %}{% if user.id == post.author %}
         <div class="btn-group">
           <button
             type="button"
             class="btn btn-sm btn-primary dropdown-toggle"
             data-bs-toggle="dropdown"
           ></button>
+
           <ul class="dropdown-menu">
             <li>
-              <a href="/delete-post/{{post.id}}" class="dropdown-item"
+              <a href="/delete-post/{{post._id}}" class="dropdown-item"
                 >Delete</a
               >
             </li>
@@ -34,14 +35,14 @@
     <div class="card-body">
       <div class="card-text">{{post.text}}</div>
       <br />
-      <div class="collapse" id="comments-{{post.id}}">
+      <div class="collapse" id="comments-{{post._id}}">
         <div class="card">
-          <div class="card-body" id="comments-expanded-{{post.id}}">
+          <div class="card-body" id="comments-expanded-{{post._id}}">
             {% for comment in post.comments %}
             <div class="d-flex justify-content-between align-items-center">
               <div>
-                <a href="/posts/{{comment.user.username}}"
-                  >{{comment.user.username}}</a
+                <a href="/posts/{{comment.author}}"
+                  >{{comment.author}}</a
                 >: {{comment.text}}
               </div>
               <div>
@@ -56,7 +57,7 @@
                   <ul class="dropdown-menu">
                     <li>
                       <a
-                        href="/delete-comment/{{comment.id}}"
+                        href="/delete-comment/{{comment._id}}"
                         class="dropdown-item"
                         >Delete</a
                       >
@@ -72,7 +73,7 @@
       </div>
       <p class="card-text">
         {% if post.comments|length > 0 %}
-        <a data-bs-toggle="collapse" href="#comments-{{post.id}}" role="button">
+        <a data-bs-toggle="collapse" href="#comments-{{post._id}}" role="button">
           <small>View {{post.comments|length}} Comments</small>
         </a>
         {% else %}
@@ -82,7 +83,7 @@
       <form
         class="input-group mb-3"
         method="POST"
-        action="/create-comment/{{post.id}}"
+        action="/create-comment/{{post._id}}"
       >
         <input
           type="text"
